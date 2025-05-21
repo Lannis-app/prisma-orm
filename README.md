@@ -17,6 +17,8 @@ npm install @lannis.ai/prisma-orm
 yarn add @lannis.ai/prisma-orm
 ```
 
+When you install this package, it automatically runs the Prisma generate command to create the client and builds the TypeScript code. No additional steps are required to get started.
+
 ## Usage
 
 ```typescript

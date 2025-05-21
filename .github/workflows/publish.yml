@@ -1,0 +1,34 @@
+name: Publish to NPM
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # Triggers on tags like v1.0.0, v0.2.1, etc.
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # Needed to checkout the repository
+      id-token: write # Needed for provenance if you enable it (optional but recommended)
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js (LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x' # Specifies the latest LTS version line
+          registry-url: 'https://registry.npmjs.org' # Standard NPM registry
+
+      - name: Install dependencies
+        run: npm ci # Use 'ci' for cleaner, faster, and more reliable builds in CI
+
+      # Optional: If your build step is not part of your commit hooks or if artifacts are not committed
+      # - name: Build project
+      #   run: npm run build
+
+      - name: Publish to NPM
+        run: npm publish --provenance --access public # '--provenance' enhances security, '--access public' for public packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} 

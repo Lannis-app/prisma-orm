@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 echo "Running linter..."
 npm run lint
 if [ $? -ne 0 ]; then
@@ -16,8 +13,13 @@ if [ $? -ne 0 ]; then
 fi
 
 # Prompt for version increment
-echo "Select version increment (patch, minor, major) [default: patch]:"
-read version_type
+if [ -t 0 ]; then # Check if stdin is a terminal
+  echo "Select version increment (patch, minor, major) [default: patch]:"
+  read version_type
+else
+  echo "Non-interactive mode detected for version increment, using default."
+  version_type="" # Ensure default logic picks it up
+fi
 
 # Set default version type if none provided
 if [ -z "$version_type" ]; then

@@ -1,10 +1,10 @@
 # @lannis.ai/prisma-orm
 
-A customized ORM package for Lannis applications, built on top of Prisma ORM. This package provides a pre-configured Prisma client with models designed for user management and financial applications.
+A shared Prisma schema package for Lannis applications. This package provides only the Prisma schema definition that can be used across different projects to maintain database consistency.
 
 ## Features
 
-- **Pre-configured Prisma Client**: Ready to use with your Lannis applications
+- **Shared Prisma Schema**: Common schema definition for all Lannis applications
 - **User Management Models**: Includes models for users, roles, and addresses
 - **Financial Models**: Supports Monotributo categories and other financial entities
 - **Location Data**: Includes models for countries and currencies
@@ -12,25 +12,50 @@ A customized ORM package for Lannis applications, built on top of Prisma ORM. Th
 ## Installation
 
 ```bash
-npm install @lannis.ai/prisma-orm
+npm install @lannis.ai/prisma-orm prisma @prisma/client
 # or
-yarn add @lannis.ai/prisma-orm
+yarn add @lannis.ai/prisma-orm prisma @prisma/client
 ```
-
-When you install this package, it automatically runs the Prisma generate command to create the client and builds the TypeScript code. No additional steps are required to get started.
 
 ## Usage
 
+After installing the package, you need to:
+
+1. Create a `prisma/schema.prisma` file in your project that references the shared schema:
+
+```prisma
+// Import the shared schema
+import "@lannis.ai/prisma-orm/prisma/schema.prisma"
+
+// You can add additional models or override settings here if needed
+```
+
+2. Configure your environment:
+
+Create a `.env` file in your project root with your database connection:
+
+```
+DATABASE_URL="your-database-connection-string"
+```
+
+3. Generate the Prisma client:
+
+```bash
+npx prisma generate
+```
+
+4. Use the generated client in your code:
+
 ```typescript
-import { prisma } from '@lannis.ai/prisma-orm';
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 // Example: Query all users
 async function getUsers() {
-  const users = await prisma.user.findMany();
-  return users;
+  const users = await prisma.user.findMany()
+  return users
 }
-
-// Use any of the generated Prisma client models and methods
 ```
 
 ## Database Schema
@@ -44,36 +69,16 @@ The package includes the following main models:
 - **Country**: Country reference data
 - **Currency**: Currency reference data
 
-## Configuration
-
-Create a `.env` file in your project root with the following:
-
-```
-DATABASE_URL="your-database-connection-string"
-```
-
-See `.env.example` for reference.
-
-## Available Scripts
-
-This package provides several npm scripts to help with development:
-
-- `npm run build`: Compiles TypeScript code to JavaScript
-- `npm run lint`: Runs TypeScript type checking without emitting files
-- `npm run db:generate`: Generates Prisma client based on your schema
-- `npm run db:migrate`: Runs Prisma migrations in development mode
-- `npm run db:studio`: Opens Prisma Studio to view and edit your database
-
 ## Development
 
-To work on this package:
+To work on this schema package:
 
 1. Clone the repository
 2. Install dependencies with `npm install` or `yarn`
 3. Configure your `.env` file with a valid PostgreSQL connection string
-4. Run `npm run db:generate` to generate the Prisma client
-5. Make your changes to the schema in `prisma/schema.prisma`
-6. Run migrations with `npm run db:migrate`
+4. Make your changes to the schema in `prisma/schema.prisma`
+5. Test with `npx prisma validate`
+6. Run migrations with `npm run db:migrate` for development testing
 
 ## License
 

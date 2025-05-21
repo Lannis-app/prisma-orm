@@ -9,13 +9,6 @@ yarn-error.log*
 .pnp
 .pnp.js
 
-# Typescript
-src/
-*.tsbuildinfo
-tsconfig.json
-
-# Prisma
-prisma/
 .env
 
 # Test files

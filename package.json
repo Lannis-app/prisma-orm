@@ -1,0 +1,26 @@
+{
+  "name": "@lannis.ai/prisma-orm",
+  "version": "0.1.0",
+  "description": "ORM package for Lannis",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@prisma/client": "6.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.10",
+    "husky": "^9.1.7",
+    "prisma": "6.7.0",
+    "ts-node": "10.9.2",
+    "typescript": "5.8.2"
+  },
+  "license": "MIT"
+}

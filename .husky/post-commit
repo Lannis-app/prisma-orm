@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Get version from package.json
+version=$(node -p "require('./package.json').version")
+
+# Create git tag
+echo "Tagging commit with v$version..."
+git tag "v$version"
+
+if [ $? -ne 0 ]; then
+  echo "Failed to create git tag. Please tag manually."
+  exit 1 # Or exit 0 if you prefer not to fail the whole process
+fi
+
+echo "Successfully tagged commit with v$version."
+exit 0 

@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "src/generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Core User Management
+model User {
+  id                   String                @id @default(uuid())
+  username             String                @unique // CUIT/CUIL
+  password             String?               // Hashed password if needed
+  firstName            String?
+  lastName             String?
+  email                String?               @unique
+  phone                String?
+  address              Address?              @relation(fields: [addressId], references: [id])
+  addressId            String?               @unique
+  roles                Role[]                @relation("UserRoles")
+  monotributoCategory  MonotributoCategory?  @relation(fields: [monotributoCategoryId], references: [id])
+  monotributoCategoryId String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+
+  @@map("users")
+}
+
+model Address {
+  id         String    @id @default(uuid())
+  street     String?
+  city       String?
+  state      String?
+  postalCode String?
+  country    Country   @relation(fields: [countryId], references: [id])
+  countryId  String
+  user       User?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map("addresses")
+}
+
+model Role {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  users       User[]    @relation("UserRoles")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("roles")
+}
+
+// Static reference data
+model MonotributoCategory {
+  id                  String    @id @default(uuid())
+  category            String    @unique
+  name                String?
+  annualBillingLimit  Float
+  fixedPercentageRate Float
+  quota               Float
+  paymentDayOfMonth   Int?
+  effectiveDate       DateTime?
+  endDate             DateTime?
+  users               User[]
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@map("ar_monotributo_categories")
+}
+
+model Country {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  code      String    @unique
+  addresses Address[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("countries")
+}
+
+model Currency {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("currencies")
+}

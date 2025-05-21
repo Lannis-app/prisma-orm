@@ -1,0 +1,45 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Running linter..."
+npm run lint
+if [ $? -ne 0 ]; then
+  echo "Linting failed. Aborting commit."
+  exit 1
+fi
+
+echo "Building project..."
+npm run build
+if [ $? -ne 0 ]; then
+  echo "Build failed. Aborting commit."
+  exit 1
+fi
+
+# Prompt for version increment
+echo "Select version increment (patch, minor, major) [default: patch]:"
+read version_type
+
+# Set default version type if none provided
+if [ -z "$version_type" ]; then
+  version_type="patch"
+fi
+
+# Validate version type
+if [[ "$version_type" != "patch" && "$version_type" != "minor" && "$version_type" != "major" ]]; then
+  echo "Invalid version type: $version_type. Must be one of patch, minor, or major. Aborting commit."
+  exit 1
+fi
+
+echo "Updating version to next $version_type..."
+npm version $version_type --no-git-tag-version
+if [ $? -ne 0 ]; then
+  echo "Failed to update version. Aborting commit."
+  exit 1
+fi
+
+# Add package.json and package-lock.json to the commit
+# This is crucial because npm version changes them.
+git add package.json package-lock.json
+
+echo "Pre-commit checks passed and version updated."
+exit 0

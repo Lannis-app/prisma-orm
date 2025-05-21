@@ -22,4 +22,20 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
-*.sw? 
+*.sw?
+
+# Ignore everything
+*
+# Except for the schema.prisma file
+!prisma/
+prisma/*
+!prisma/schema.prisma
+
+# Always ignore these
+.git/
+.github/
+.husky/
+node_modules/
+dist/
+src/
+.env.example 

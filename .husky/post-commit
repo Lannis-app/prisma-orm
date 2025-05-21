@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
 
 # Get version from package.json
 version=$(node -p "require('./package.json').version")

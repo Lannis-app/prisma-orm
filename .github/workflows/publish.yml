@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read # Needed to checkout the repository
-      id-token: write # Needed for provenance if you enable it (optional but recommended)
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,6 +28,6 @@ jobs:
       #   run: npm run build
 
       - name: Publish to NPM
-        run: npm publish --provenance --access public # '--provenance' enhances security, '--access public' for public packages
+        run: npm publish --access public # '--access public' for public packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} 
